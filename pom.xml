@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>me.alllexey123</groupId>
 	<artifactId>openjfs</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>openjfs</name>
 	<description>Open File Server written in Java</description>
 	<url/>
