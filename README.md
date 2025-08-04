@@ -56,11 +56,12 @@ A simple, open-source Java Spring Boot application designed to serve static file
 
 The application is configured through environment variables.
 
-| Environment Variable               | Description                                                                      | Default Value        |
-| ---------------------------------- | -------------------------------------------------------------------------------- | ------------------   |
-| `OPENJFS_DATA_PATH`                | The absolute path to the directory you want to serve files from.                 | Current directory    |
-| `OPENJFS_ALLOW_HIDDEN`             | Set to `true` to allow access to hidden files and directories.                   | `true`               |
-| `OPENJFS_ALLOW_ZIP_DIRECTORIES`    | Set to `true` to enable downloading entire directories as a ZIP archive.         | `true`               |
-| `OPENJFS_ZIP_COMPRESSION_LEVEL`    | The compression level for ZIP archives, from -1 (no compression) to 9 (max).     | `3`                  |
-| `OPENJFS_PORT`                     | The port for webserver.                                                          | `8080`               |
+| Environment Variable            | Description                                                                  | Default Value     |
+|---------------------------------|------------------------------------------------------------------------------|-------------------|
+| `OPENJFS_DATA_PATH`             | The absolute path to the directory you want to serve files from.             | Current directory |
+| `OPENJFS_PORT`                  | The port for webserver.                                                      | `8080`            |
+| `OPENJFS_ALLOW_HIDDEN`          | Set to `true` to allow access to hidden files and directories.               | `true`            |
+| `OPENJFS_ALLOW_ZIP_DIRECTORIES` | Set to `true` to enable downloading entire directories as a ZIP archive.     | `true`            |
+| `OPENJFS_ZIP_COMPRESSION_LEVEL` | The compression level for ZIP archives, from -1 (no compression) to 9 (max). | `3`               |
+| `OPENJFS_REQUEST_TIMEOUT`       | The request timeout (crucial for large file downloads)                       | `3600000`         |
 
