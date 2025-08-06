@@ -71,7 +71,7 @@ public class DirectController {
 
             return ResponseEntity.ok()
                     .header("Content-Disposition", "attachment; filename=\"" + file.getName() + ".zip\"")
-                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .contentType(new MediaType("application", "zip"))
                     .body(stream);
         }
 

@@ -20,7 +20,7 @@ public class MainConfigurationProperties {
 
     private boolean allowZipDirectories;
 
-    @Range(min = -1, max = 9)
+    @Range(min = 0, max = 9)
     private int zipCompressionLevel;
 
     public Path getDataPathAsPath() {
