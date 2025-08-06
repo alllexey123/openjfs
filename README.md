@@ -9,12 +9,13 @@ A simple, open-source **Java Spring Boot** application designed to serve static 
 
 *   **Directory Download (as ZIP):** Download entire directories as a single ZIP archive.
 *   **Direct File Download:** Access and download individual files directly through a simple URL structure.
-*   **JSON Directory Listings:** List your files (with some basic data) using simple API.
+*   **JSON Directory Listings and Search:** Search or list your files (with some basic data) using simple API.
 
 ## Roadmap
 
 *   [x] **JSON Directory Listings**
-*   [ ] **Search**
+*   [x] **Search**
+*   [ ] **Indexed Search** *(maybe)*
 *   [ ] **Web UI** 
 *   [ ] **Admin Panel**
 *   [ ] **Docker Support**
