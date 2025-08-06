@@ -1,17 +1,20 @@
 # Open Java File Server (🛠️ WIP 🛠️)
 
-A simple, open-source Java Spring Boot application designed to serve static files from a specified directory. It provides straightforward, unauthenticated access to your files, for easy personal or internal network file sharing.
+A simple, open-source **Java Spring Boot** application designed to serve static files from a specified directory. It provides straightforward, unauthenticated access to your files, for easy personal or internal network file sharing.
 
 **Please note: This project is under active development. Expect changes and potential instability.**
 
+**Symlinks are not officially supported at the moment.**
 ## Features
 
 *   **Directory Download (as ZIP):** Download entire directories as a single ZIP archive.
 *   **Direct File Download:** Access and download individual files directly through a simple URL structure.
+*   **JSON Directory Listings:** List your files (with some basic data) using simple API.
 
 ## Roadmap
 
-*   [ ] **JSON Directory Listings** 
+*   [+] **JSON Directory Listings**
+*   [ ] **Search**
 *   [ ] **Web UI** 
 *   [ ] **Admin Panel**
 *   [ ] **Docker Support**
@@ -50,7 +53,34 @@ A simple, open-source Java Spring Boot application designed to serve static file
         java -jar target/openjfs-*.jar
         ```
 
-    Once running, you can access your files at `http://localhost:8080`. For example, a file located at `/path/to/your/files/documents/report.pdf` would be accessible at `http://localhost:8080/direct/documents/report.pdf`.
+## Usage
+Once running, you can access your files at `http://localhost:8080`. 
+
+### Downloading
+You can download your files using `http://localhost:8080/direct/path_to_your/file.ext`. Using `OPENJFS_ALLOW_ZIP_DIRECTORIES=true` will zip directories on the fly.
+
+For example, a file located at `${OPENJFS_DATA_PATH}/documents/report.pdf` would be accessible at `http://localhost:8080/direct/documents/report.pdf`.
+
+### JSON Listing
+You can get basic file/directory info using `http://localhost:8080/list/path_to_your/dir`.
+Example response: 
+```json
+{
+  "path": "",
+  "name": "dir",
+  "lastModified": "2025-08-04T16:28:37.23",
+  "files": [
+    {
+      "path": "dir/",
+      "name": "file1.txt",
+      "lastModified": "2025-08-04T15:07:10.41",
+      "size": 5,
+      "type": "REGULAR_FILE"
+    }
+  ],
+  "type": "DIRECTORY"
+}
+```
 
 ## Configuration
 
@@ -63,5 +93,5 @@ The file server is configured through environment variables.
 | `OPENJFS_ALLOW_HIDDEN`          | Set to `true` to allow access to hidden files and directories.              | `true`            |
 | `OPENJFS_ALLOW_ZIP_DIRECTORIES` | Set to `true` to enable downloading entire directories as a ZIP archive.    | `true`            |
 | `OPENJFS_ZIP_COMPRESSION_LEVEL` | The compression level for ZIP archives, from 0 (no compression) to 9 (max). | `1`               |
-| `OPENJFS_REQUEST_TIMEOUT`       | The request timeout (crucial for large file downloads)                      | `3600000`         |
+| `OPENJFS_REQUEST_TIMEOUT`       | The request timeout (crucial for large file downloads).                     | `3600000`         |
 
