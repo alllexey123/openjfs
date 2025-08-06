@@ -67,7 +67,7 @@ public class FileService {
         return filePath.getFileName().toString().startsWith(".");
     }
 
-    // assume file exists and is accessible (visible, not outside, etc.)
+    // assume file (directory) exists and is accessible (visible, not outside, etc.)
     public FileInfo getFileInfo(Path fullPath, int depth) {
         if (depth < 0) return null; // should not happen
         Path parentPath = properties.getDataPathAsPath().relativize(fullPath).getParent();
@@ -115,6 +115,26 @@ public class FileService {
                     .build();
         } else {
             return null; // should not happen
+        }
+    }
+
+    // assume file (directory) exists and is accessible (visible, not outside, etc.)
+    public List<FileInfo> simpleSearch(Path fullPath, String query) {
+        final String queryLowerCase = query.toLowerCase();
+        try (Stream<Path> stream = Files.walk(fullPath)) {
+            List<FileInfo> files = new ArrayList<>();
+            stream.forEach(path -> {
+                if (isHiddenByName(path) && !properties.isAllowHidden()) return;
+
+                if (path.getFileName().toString().toLowerCase().contains(queryLowerCase)) {
+                    FileInfo fi = getFileInfo(path, 0);
+                    if (fi == null) return;
+                    files.add(fi);
+                }
+            });
+            return files;
+        } catch (IOException e) {
+            return null;
         }
     }
 
