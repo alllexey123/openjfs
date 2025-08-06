@@ -13,7 +13,7 @@ A simple, open-source **Java Spring Boot** application designed to serve static 
 
 ## Roadmap
 
-*   [+] **JSON Directory Listings**
+*   [x] **JSON Directory Listings**
 *   [ ] **Search**
 *   [ ] **Web UI** 
 *   [ ] **Admin Panel**
