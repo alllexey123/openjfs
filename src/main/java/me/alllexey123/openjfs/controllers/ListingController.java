@@ -14,15 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.nio.file.Path;
 
 @RestController
-@RequestMapping("/json")
+@RequestMapping("/list")
 @RequiredArgsConstructor
-public class JsonController {
+public class ListingController {
 
     private final FileService fileService;
 
     @GetMapping(value = "/**")
     public ResponseEntity<FileInfo> direct(HttpServletRequest request) {
-        String requestedPathStr = request.getRequestURI().substring("/json/".length());
+        String requestedPathStr = request.getRequestURI().substring("/list/".length());
         Path fullPath = fileService.getFullPath(Path.of(requestedPathStr));
 
         HttpStatusCode accessCheck = fileService.checkAccess(fullPath);
