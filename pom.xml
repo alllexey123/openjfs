@@ -6,19 +6,25 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.5.4</version>
-		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>me.alllexey123</groupId>
 	<artifactId>openjfs</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<name>openjfs</name>
-	<description>Open File Server written in Java</description>
-	<url/>
+	<description>Open Java File Server (based on Spring Boot)</description>
+	<url>https://github.com/alllexey123/openjfs</url>
 	<licenses>
-		<license/>
+		<license>
+			<name>MIT License</name>
+			<url>https://www.opensource.org/licenses/mit-license.php</url>
+		</license>
 	</licenses>
 	<developers>
-		<developer/>
+		<developer>
+			<name>Aleksey Makarov</name>
+			<organization>io.github.alllexey123</organization>
+			<organizationUrl>https://github.com/alllexey123</organizationUrl>
+		</developer>
 	</developers>
 	<scm>
 		<connection/>
