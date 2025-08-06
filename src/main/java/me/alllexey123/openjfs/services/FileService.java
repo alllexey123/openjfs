@@ -2,6 +2,9 @@ package me.alllexey123.openjfs.services;
 
 import lombok.RequiredArgsConstructor;
 import me.alllexey123.openjfs.configuration.MainConfigurationProperties;
+import me.alllexey123.openjfs.model.DirectoryInfo;
+import me.alllexey123.openjfs.model.FileInfo;
+import me.alllexey123.openjfs.model.RegularFileInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,10 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -58,6 +65,57 @@ public class FileService {
 
     public boolean isHiddenByName(Path filePath) {
         return filePath.getFileName().toString().startsWith(".");
+    }
+
+    // assume file exists and is accessible (visible, not outside, etc.)
+    public FileInfo getFileInfo(Path fullPath, int depth) {
+        if (depth < 0) return null; // should not happen
+        Path parentPath = properties.getDataPathAsPath().relativize(fullPath).getParent();
+        String relPath = parentPath == null ? "" : (parentPath + "/");
+        String name = fullPath.getFileName().toString();
+        LocalDateTime lastModified = null;
+
+        try {
+            lastModified = LocalDateTime.ofInstant(Files.getLastModifiedTime(fullPath).toInstant(), ZoneId.systemDefault());
+        } catch (IOException ignored) {
+        }
+
+        if (Files.isRegularFile(fullPath)) {
+            long size = -1;
+            try {
+                size = Files.size(fullPath);
+            } catch (IOException ignored) {
+            }
+
+            return RegularFileInfo.builder()
+                    .path(relPath)
+                    .name(name)
+                    .lastModified(lastModified)
+                    .size(size)
+                    .build();
+        } else if (Files.isDirectory(fullPath)) {
+            List<FileInfo> files = new ArrayList<>();
+            if (depth >= 1) {
+                try (Stream<Path> stream = Files.list(fullPath)) {
+                    stream.forEach(path -> {
+                        if (isHiddenByName(path) && !properties.isAllowHidden()) return; // check by name because already parent dirs are checked
+                        FileInfo fi = getFileInfo(path, depth - 1);
+                        if (fi == null) return;
+                        files.add(fi);
+                    });
+                } catch (IOException ignored) {
+                }
+            }
+
+            return DirectoryInfo.builder()
+                    .path(relPath)
+                    .name(name)
+                    .lastModified(lastModified)
+                    .files(depth >= 1 ? files : null)
+                    .build();
+        } else {
+            return null; // should not happen
+        }
     }
 
     public StreamingResponseBody zipDirectory(Path dirPath) {

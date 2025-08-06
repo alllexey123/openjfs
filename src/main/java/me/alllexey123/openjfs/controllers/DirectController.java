@@ -27,7 +27,7 @@ public class DirectController {
     private final FileService fileService;
 
     @GetMapping(value = "/**")
-    public ResponseEntity<StreamingResponseBody> direct(HttpServletRequest request) throws IOException {
+    public ResponseEntity<StreamingResponseBody> directDownload(HttpServletRequest request) throws IOException {
         String requestedPathStr = request.getRequestURI().substring("/direct/".length()).replace("%20", " ");
         Path totalPath = fileService.getFullPath(Path.of(requestedPathStr));
 
