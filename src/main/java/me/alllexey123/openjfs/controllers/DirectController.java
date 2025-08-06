@@ -30,8 +30,6 @@ public class DirectController {
     public ResponseEntity<StreamingResponseBody> direct(HttpServletRequest request) throws IOException {
         String requestedPathStr = request.getRequestURI().substring("/direct/".length()).replace("%20", " ");
         Path totalPath = fileService.getFullPath(Path.of(requestedPathStr));
-        System.out.println(requestedPathStr);
-        System.out.println(totalPath);
 
         HttpStatusCode accessCheck = fileService.checkAccess(totalPath);
         if (!accessCheck.is2xxSuccessful()) return ResponseEntity.status(accessCheck).build();
