@@ -26,23 +26,22 @@ public class DirectController {
 
     private final FileService fileService;
 
-    @GetMapping(value = "/**")
+    @GetMapping(value = "**")
     public ResponseEntity<StreamingResponseBody> directDownload(HttpServletRequest request) throws IOException {
-        String requestedPathStr = request.getRequestURI().substring("/direct/".length()).replace("%20", " ");
-        Path totalPath = fileService.getFullPath(Path.of(requestedPathStr));
+        Path fullPath = fileService.resolveRequestedPath(request.getRequestURI(), "/direct");
 
-        HttpStatusCode accessCheck = fileService.checkAccess(totalPath);
+        HttpStatusCode accessCheck = fileService.checkAccess(fullPath);
         if (!accessCheck.is2xxSuccessful()) return ResponseEntity.status(accessCheck).build();
 
-        String filename = totalPath.getFileName().toString();
+        String filename = fullPath.getFileName().toString();
 
-        if (Files.isDirectory(totalPath)) {
+        if (Files.isDirectory(fullPath)) {
             // 400 if it's a directory (and zipping dirs is disabled)
             if (!properties.isAllowZipDirectories()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
 
-            StreamingResponseBody zipStream = fileService.zipDirectory(totalPath);
+            StreamingResponseBody zipStream = fileService.zipDirectory(fullPath);
 
             return ResponseEntity.ok()
                     .header("Content-Disposition", "attachment; filename=\"%s.zip\"".formatted(filename))
@@ -50,15 +49,15 @@ public class DirectController {
                     .body(zipStream);
         }
 
-        if (Files.isRegularFile(totalPath)) {
+        if (Files.isRegularFile(fullPath)) {
             StreamingResponseBody stream = outputStream -> {
-                try (InputStream inputStream = Files.newInputStream(totalPath)) {
+                try (InputStream inputStream = Files.newInputStream(fullPath)) {
                     inputStream.transferTo(outputStream);
                 }
             };
 
             return ResponseEntity.ok()
-                    .contentLength(Files.size(totalPath))
+                    .contentLength(Files.size(fullPath))
                     .header("Content-Disposition", "attachment; filename=\"%s\"".formatted(filename))
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
                     .body(stream);

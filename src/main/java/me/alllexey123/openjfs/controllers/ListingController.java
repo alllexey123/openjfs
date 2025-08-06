@@ -20,10 +20,9 @@ public class ListingController {
 
     private final FileService fileService;
 
-    @GetMapping(value = "/**")
+    @GetMapping(value = "**")
     public ResponseEntity<FileInfo> list(HttpServletRequest request) {
-        String requestedPathStr = request.getRequestURI().substring("/list/".length());
-        Path fullPath = fileService.getFullPath(Path.of(requestedPathStr));
+        Path fullPath = fileService.resolveRequestedPath(request.getRequestURI(), "/list");
 
         HttpStatusCode accessCheck = fileService.checkAccess(fullPath);
         if (!accessCheck.is2xxSuccessful()) return ResponseEntity.status(accessCheck).build();

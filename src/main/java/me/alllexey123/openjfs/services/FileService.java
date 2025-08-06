@@ -30,6 +30,16 @@ public class FileService {
 
     private final MainConfigurationProperties properties;
 
+    public Path resolveRequestedPath(String requestUri, String requestPath) {
+        String realRequestUri;
+        if (requestUri.equals(requestPath)) {
+            realRequestUri = "";
+        } else {
+            realRequestUri = requestUri.substring(requestPath.length() + 1).replace("%20", " ");
+        }
+        return getFullPath(Path.of(realRequestUri));
+    }
+
     public Path getFullPath(Path requestedPath) {
         return properties.getDataPathAsPath().resolve(requestedPath).normalize();
     }

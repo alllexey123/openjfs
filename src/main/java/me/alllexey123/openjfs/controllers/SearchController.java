@@ -19,10 +19,9 @@ public class SearchController {
 
     private final FileService fileService;
 
-    @GetMapping(value = "/**")
+    @GetMapping(value = "**")
     public ResponseEntity<List<FileInfo>> search(HttpServletRequest request, @RequestParam("q") String query) {
-        String requestedPathStr = request.getRequestURI().substring("/search/".length());
-        Path fullPath = fileService.getFullPath(Path.of(requestedPathStr));
+        Path fullPath = fileService.resolveRequestedPath(request.getRequestURI(), "/search");
 
         HttpStatusCode accessCheck = fileService.checkAccess(fullPath);
         if (!accessCheck.is2xxSuccessful()) return ResponseEntity.status(accessCheck).build();
