@@ -3,7 +3,7 @@
     --file-div-color: #E0E0E0;
     --hovered-button-bg-color: #DEDEDE;
     --main-text-color: #000000;
-    --rl-padding: 60px;
+    --rl-padding: 40px;
 }
 
 /* poppins-300 - latin */
@@ -51,7 +51,7 @@ button {
 .topnav-path {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
     padding: 8px 0;
 }
 
@@ -59,10 +59,10 @@ button {
     color: var(--main-text-color);
     text-decoration: none;
     font-weight: 400;
-    font-size: 26px;
+    font-size: 22px;
     border-radius: 12px;
     transition: background 0.2s ease;
-    padding: 6px 12px;
+    padding: 4px 8px;
 }
 
 .topnav-path a:hover {
@@ -71,13 +71,13 @@ button {
 }
 
 .topnav-path .topnav-arrow {
-    height: 24px;
+    height: 20px;
 }
 
 .topnav-right {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     padding: 8px 0;
     margin-left: auto;
 }
@@ -95,15 +95,15 @@ button {
 }
 
 .topnav-right .download-icon {
-    height: 32px;
+    height: 28px;
 }
 
 .topnav-right .link-icon {
-    height: 32px;
+    height: 28px;
 }
 
 .topnav-right .topnav-search .search-icon {
-    height: 28px;
+    height: 24px;
 }
 
 .topnav-right .topnav-search {
@@ -133,7 +133,7 @@ button {
     border: none;
     outline: none;
     background: transparent;
-    font-size: 20px;
+    font-size: 18px;
     flex: 1;
     color: var(--main-text-color);
 }
@@ -156,10 +156,11 @@ button {
 .file-list-header {
     font-weight: 600;
     border-bottom: 2px solid var(--file-div-color);
+    padding-top: 16px;
     padding-bottom: 4px;
 
     position: sticky;
-    top: 60px;
+    top: 44px;
     background: white;
     z-index: 999;
 }
