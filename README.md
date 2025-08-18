@@ -63,7 +63,7 @@ You can download your files using `http://localhost:8080/direct/path_to_your/fil
 
 For example, a file located at `${OPENJFS_DATA_PATH}/documents/report.pdf` would be accessible at `http://localhost:8080/direct/documents/report.pdf`.
 
-### JSON Listing
+### JSON File Listing
 You can get basic file/directory info using `http://localhost:8080/list/path_to_your/dir`.
 Example response: 
 ```json
@@ -87,7 +87,7 @@ Example response:
 }
 ```
 
-### JSON Listing
+### JSON File Search
 You can perform basic file/directory search using `http://localhost:8080/search/path_to_your/dir?q=filetosearch`.
 Example response:
 ```json
