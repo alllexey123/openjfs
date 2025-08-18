@@ -84,7 +84,7 @@ public class FileService {
         Path relativize = properties.getDataPathAsPath().relativize(fullPath);
         Path parentPath = relativize.getParent();
         String relPath = parentPath == null ? "" : (parentPath + "/");
-        String name = relativize.toString().equals("") ? "" : fullPath.getFileName().toString();
+        String name = relativize.toString().isEmpty() ? "" : fullPath.getFileName().toString();
         long lastModifiedMillis = -1;
         LocalDateTime lastModified = null;
 
