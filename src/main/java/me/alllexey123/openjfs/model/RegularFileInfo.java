@@ -16,6 +16,8 @@ public class RegularFileInfo implements FileInfo {
 
     private LocalDateTime lastModified;
 
+    private long lastModifiedMillis;
+
     private long size;
 
     @Override

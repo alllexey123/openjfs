@@ -18,7 +18,11 @@ public class DirectoryInfo implements FileInfo {
 
     private LocalDateTime lastModified;
 
+    private long lastModifiedMillis;
+
     private List<FileInfo> files = new ArrayList<>();
+
+    private boolean isEmpty;
 
     @Override
     public FileType getType() {

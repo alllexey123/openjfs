@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -83,10 +84,13 @@ public class FileService {
         Path parentPath = properties.getDataPathAsPath().relativize(fullPath).getParent();
         String relPath = parentPath == null ? "" : (parentPath + "/");
         String name = fullPath.getFileName().toString();
+        long lastModifiedMillis = -1;
         LocalDateTime lastModified = null;
 
         try {
-            lastModified = LocalDateTime.ofInstant(Files.getLastModifiedTime(fullPath).toInstant(), ZoneId.systemDefault());
+            Instant instant = Files.getLastModifiedTime(fullPath).toInstant();
+            lastModifiedMillis = instant.toEpochMilli();
+            lastModified = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
         } catch (IOException ignored) {
         }
 
@@ -101,19 +105,36 @@ public class FileService {
                     .path(relPath)
                     .name(name)
                     .lastModified(lastModified)
+                    .lastModifiedMillis(lastModifiedMillis)
                     .size(size)
                     .build();
         } else if (Files.isDirectory(fullPath)) {
             List<FileInfo> files = new ArrayList<>();
+            boolean isEmpty = true;
             if (depth >= 1) {
                 try (Stream<Path> stream = Files.list(fullPath)) {
                     stream.forEach(path -> {
-                        if (isHiddenByName(path) && !properties.isAllowHidden()) return; // check by name because already parent dirs are checked
+                        if (isHiddenByName(path) && !properties.isAllowHidden())
+                            return; // check by name because already parent dirs are checked
                         FileInfo fi = getFileInfo(path, depth - 1);
                         if (fi == null) return;
                         files.add(fi);
                     });
                 } catch (IOException ignored) {
+                }
+
+                isEmpty = files.isEmpty();
+            } else {
+                if (properties.isAllowHidden()) {
+                    try {
+                        isEmpty = isEmpty(fullPath);
+                    } catch (IOException ignored) {
+                    }
+                } else {
+                    try {
+                        isEmpty = !containsNonHidden(fullPath);
+                    } catch (IOException ignored) {
+                    }
                 }
             }
 
@@ -121,11 +142,33 @@ public class FileService {
                     .path(relPath)
                     .name(name)
                     .lastModified(lastModified)
+                    .lastModifiedMillis(lastModifiedMillis)
+                    .isEmpty(isEmpty)
                     .files(depth >= 1 ? files : null)
                     .build();
         } else {
             return null; // should not happen
         }
+    }
+
+    public boolean isEmpty(Path path) throws IOException {
+        if (Files.isDirectory(path)) {
+            try (Stream<Path> entries = Files.list(path)) {
+                return entries.findFirst().isEmpty();
+            }
+        }
+
+        return false;
+    }
+
+    public boolean containsNonHidden(Path path) throws IOException {
+        if (Files.isDirectory(path)) {
+            try (Stream<Path> entries = Files.list(path)) {
+                return entries.anyMatch(entry -> !isHiddenByName(entry));
+            }
+        }
+
+        return false;
     }
 
     // assume file (directory) exists and is accessible (visible, not outside, etc.)

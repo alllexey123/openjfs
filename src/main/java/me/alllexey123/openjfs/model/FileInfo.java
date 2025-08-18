@@ -11,4 +11,6 @@ public interface FileInfo {
     FileType getType();
 
     LocalDateTime getLastModified();
+
+    long getLastModifiedMillis();
 }
