@@ -1,0 +1,135 @@
+:root {
+    --topbar-bg-color: #EEEEEE;
+    --hovered-button-bg-color: #DEDEDE;
+    --main-text-color: #000000;
+    --rl-padding: 60px;
+}
+
+/* poppins-300 - latin */
+@font-face {
+    font-display: swap;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 300;
+    src: url('/fonts/poppins-v23-latin-300.woff2') format('woff2');
+}
+
+/* poppins-regular - latin */
+@font-face {
+    font-display: swap;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    src: url('/fonts/poppins-v23-latin-regular.woff2') format('woff2');
+}
+
+
+body {
+    margin: 0;
+    color: var(--main-text-color);
+    font-family: "Poppins", sans-serif;
+}
+
+button {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.topnav {
+    background-color: var(--topbar-bg-color);
+    padding: 0 var(--rl-padding);
+    display: flex;
+    align-items: center;
+}
+
+.topnav-path {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+}
+
+.topnav-path a {
+    color: var(--main-text-color);
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 26px;
+    border-radius: 12px;
+    transition: background 0.2s ease;
+    padding: 6px 12px;
+}
+
+.topnav-path a:hover {
+    background-color: var(--hovered-button-bg-color);
+    color: black;
+}
+
+.topnav-path .topnav-arrow {
+    height: 24px;
+}
+
+.topnav-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 0;
+    margin-left: auto;
+}
+
+.topnav-right button {
+    display: flex;
+    align-items: center;
+    border-radius: 12px;
+    transition: background 0.2s ease;
+    padding: 6px;
+}
+
+.topnav-right button:hover {
+    background-color: var(--hovered-button-bg-color);
+}
+
+.topnav-right .download-icon {
+    height: 32px;
+}
+
+.topnav-right .link-icon {
+    height: 32px;
+}
+
+.topnav-right .topnav-search .search-icon {
+    height: 28px;
+}
+
+.topnav-right .topnav-search {
+    display: flex;
+    align-items: center;
+    background: var(--hovered-button-bg-color);
+    padding: 8px 12px;
+    border-radius: 24px;
+    width: 300px;
+    margin-left: 16px;
+}
+
+.topnav-right .topnav-search button {
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+    border-radius: 12px;
+    transition: background 0.2s ease;
+    padding: 0;
+}
+
+.topnav-right .topnav-search button:hover {
+    color: #cccccc;
+}
+
+.topnav-right .topnav-search input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 20px;
+    flex: 1;
+    color: var(--main-text-color);
+}
+
