@@ -18,10 +18,10 @@ public class RegularFileInfo implements FileInfo {
 
     private long lastModifiedMillis;
 
-    private long size;
-
     @Override
     public FileType getType() {
         return FileType.REGULAR_FILE;
     }
+
+    private long size;
 }

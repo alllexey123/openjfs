@@ -20,12 +20,12 @@ public class DirectoryInfo implements FileInfo {
 
     private long lastModifiedMillis;
 
-    private List<FileInfo> files = new ArrayList<>();
-
-    private boolean isEmpty;
-
     @Override
     public FileType getType() {
         return FileType.DIRECTORY;
     }
+
+    private boolean isEmpty;
+
+    private List<FileInfo> files = new ArrayList<>();
 }
