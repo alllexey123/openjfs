@@ -9,16 +9,17 @@ A simple, open-source **Java Spring Boot** application designed to serve static 
 
 *   **Directory Download (as ZIP):** Download entire directories as a single ZIP archive.
 *   **Direct File Download:** Access and download individual files directly through a simple URL structure.
-*   **JSON Directory Listings and Search:** Search or list your files (with some basic data) using simple API.
+*   **JSON File Lists and Search:** List or search your files (and get some basic data) using simple API.
 
 ## Roadmap
 
-*   [x] **JSON Directory Listings**
-*   [x] **Search**
-*   [ ] **Indexed Search** *(maybe)*
+*   [x] **File Lists API**
+*   [x] **File Search API**
+*   [ ] **File Indexing** *(maybe)*
 *   [ ] **Web UI** 
 *   [ ] **Admin Panel**
 *   [ ] **Docker Support**
+*   [ ] **Advanced Exception Logging**
 
 ## Getting Started
 
@@ -70,17 +71,44 @@ Example response:
   "path": "",
   "name": "dir",
   "lastModified": "2025-08-04T16:28:37.23",
+  "lastModifiedMillis": 1754296117230,
   "files": [
     {
       "path": "dir/",
-      "name": "file1.txt",
+      "name": "test.txt",
       "lastModified": "2025-08-04T15:07:10.41",
+      "lastModifiedMillis": 1754291230410,
       "size": 5,
       "type": "REGULAR_FILE"
     }
   ],
+  "empty": false,
   "type": "DIRECTORY"
 }
+```
+
+### JSON Listing
+You can perform basic file/directory search using `http://localhost:8080/search/path_to_your/dir?q=filetosearch`.
+Example response:
+```json
+[
+  {
+    "path": "",
+    "name": "123.txt",
+    "lastModified": "2025-08-04T14:59:59.6",
+    "lastModifiedMillis": 1754290799600,
+    "size": 13,
+    "type": "REGULAR_FILE"
+  },
+  {
+    "path": "dir/",
+    "name": ".h123.txt",
+    "lastModified": "2025-08-04T16:28:24.4",
+    "lastModifiedMillis": 1754296104400,
+    "size": 11,
+    "type": "REGULAR_FILE"
+  }
+]
 ```
 
 ## Configuration
