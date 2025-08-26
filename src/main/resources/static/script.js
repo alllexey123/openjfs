@@ -61,11 +61,21 @@ function updateFileList(files) {
     const fileList = document.querySelector('.file-list');
     fileList.innerHTML = '';
 
+    sortFileList(files);
     for (let fileKey in files) {
         let file = files[fileKey];
         let listItem = createListItem(file);
         fileList.appendChild(listItem);
     }
+}
+
+function sortFileList(files) {
+    files.sort((a, b) => {
+        if (a.type === "DIRECTORY" && b.type !== "DIRECTORY") return -1;
+        if (a.type !== "DIRECTORY" && b.type === "DIRECTORY") return 1;
+
+        return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
 }
 
 function updateFileContent(text) {
@@ -142,8 +152,8 @@ function createListItem(file) {
     if (isDirectory) {
         listItem.classList.add('dir-row')
     }
-
     const colName = document.createElement('div');
+
     colName.classList.add('col', 'name');
     const icon = document.createElement('img');
     icon.classList.add('icon');
@@ -152,18 +162,18 @@ function createListItem(file) {
     const nameTextNode = document.createTextNode(fileName);
     colName.appendChild(icon);
     colName.appendChild(nameTextNode);
-
     const colModified = document.createElement('div');
+
     colModified.classList.add('col', 'modified');
     const modifiedTextNode = document.createTextNode(fileLastModified);
     colModified.appendChild(modifiedTextNode);
-
     const colSize = document.createElement('div');
+
     colSize.classList.add('col', 'size');
     const sizeTextNode = document.createTextNode(fileSize);
     colSize.appendChild(sizeTextNode);
-
     const colActions = document.createElement('div');
+
     colActions.classList.add('col', 'actions');
     const downloadButton = document.createElement('button');
     const downloadIcon = document.createElement('img');
@@ -180,22 +190,26 @@ function createListItem(file) {
     linkIcon.src = '/svg/link.svg';
     linkButton.appendChild(linkIcon);
     colActions.appendChild(linkButton);
-
     listItem.onclick = () => {
+
         // if (!isDirectory) return;
         updateData(path + fileName);
         updateWindowPath(path + fileName);
     }
-
     linkButton.onclick = (e) => {
+
         e.stopPropagation();
         navigator.clipboard.writeText(window.location.origin + '/' + path + fileName)
     }
-
     downloadButton.onclick = (e) => {
+
         e.stopPropagation();
         if (isDirectory && !allowDownloadDirs) return;
         window.location.pathname = '/direct/' + path + fileName;
+    }
+
+    if (fileName.startsWith('.')) {
+        colName.classList.add('hidden-file');
     }
 
     listItem.appendChild(colName);

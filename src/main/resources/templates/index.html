@@ -24,7 +24,7 @@
 <body>
 <div class="topbar">
     <div class="topbar-path">
-        <a href="/ui" class="server-name" th:text="${serverName}"></a>3
+        <a href="/ui" class="server-name" th:text="${serverName}"></a>
     </div>
     <div class="topbar-right">
         <button onclick="handleTopbarDownload()" class="topbar-download">
@@ -54,9 +54,9 @@
         <div class="file-list"></div>
     </div>
 
-    <div class="file-content-wrapper">
+    <div class="file-content-wrapper hidden">
         <div class="file-content-title"></div>
-        <textarea class="file-content"></textarea>
+        <textarea class="file-content hidden"></textarea>
     </div>
 </div>
 

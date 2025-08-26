@@ -225,7 +225,11 @@ button {
 }
 
 .unavailable {
-    opacity: 40%;
+    opacity: 50%;
+}
+
+.hidden-file {
+    opacity: 50%;
 }
 
 button:hover.unavailable {
