@@ -209,16 +209,25 @@ button {
 }
 
 .file-content-title {
-    font-size: 28px;
+    font-size: 20px;
     margin-bottom: 8px;
 }
 
 .file-content {
     width: 100%;
-    min-height: 400px;
-    height: fit-content;
+    height: 70vh;
+    min-height: 300px;
+    max-height: 80vh;
+    resize: vertical;
+    overflow: auto;
+    font-family: monospace;
+    border: 1px solid #ccc;
+    padding: 12px;
     border-radius: 8px;
+    line-height: 1.4;
+    background: #fafafa;
 }
+
 
 .hidden {
     display: none;
