@@ -138,11 +138,13 @@ function createListItem(file) {
         updateWindowPath(path + fileName);
     }
 
-    linkButton.onclick = () => {
+    linkButton.onclick = (e) => {
+        e.stopPropagation();
         navigator.clipboard.writeText(window.location.origin+ '/' + path + fileName)
     }
 
-    downloadButton.onclick = () => {
+    downloadButton.onclick = (e) => {
+        e.stopPropagation();
         if (isDirectory && !allowDownloadDirs) return;
         window.location.pathname = '/direct/' + path + fileName;
     }
