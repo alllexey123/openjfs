@@ -34,6 +34,7 @@ public class DirectController {
         if (!accessCheck.is2xxSuccessful()) return ResponseEntity.status(accessCheck).build();
 
         String filename = fullPath.getFileName().toString();
+        if (fullPath.equals(properties.getDataPathAsPath())) filename = "data";
 
         if (Files.isDirectory(fullPath)) {
             // 400 if it's a directory (and zipping dirs is disabled)
