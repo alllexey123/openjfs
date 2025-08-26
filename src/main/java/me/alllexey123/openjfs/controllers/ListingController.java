@@ -22,9 +22,7 @@ public class ListingController {
 
     @GetMapping("/{*path}")
     public ResponseEntity<FileInfo> list(@PathVariable String path) {
-        System.out.println(path);
         Path fullPath = fileService.resolveRequestedPath(path);
-        System.out.println(fullPath);
         HttpStatusCode accessCheck = fileService.checkAccess(fullPath);
         if (!accessCheck.is2xxSuccessful()) return ResponseEntity.status(accessCheck).build();
 
