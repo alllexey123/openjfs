@@ -1,0 +1,53 @@
+package me.alllexey123.openjfs.controllers;
+
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import me.alllexey123.openjfs.services.FileService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+@RestController
+@RequestMapping("/text")
+@RequiredArgsConstructor
+public class TextController {
+
+    private final FileService fileService;
+
+    @GetMapping(value = "**")
+    public ResponseEntity<StreamingResponseBody> asText(HttpServletRequest request) throws IOException {
+        Path fullPath = fileService.resolveRequestedPath(request.getRequestURI(), "/text");
+
+        HttpStatusCode accessCheck = fileService.checkAccess(fullPath);
+        if (!accessCheck.is2xxSuccessful()) return ResponseEntity.status(accessCheck).build();
+
+        if (Files.isDirectory(fullPath)) {
+            return ResponseEntity.badRequest().build(); // can't do this for directories
+        }
+
+        if (Files.isRegularFile(fullPath)) {
+            StreamingResponseBody stream = outputStream -> {
+                try (InputStream inputStream = Files.newInputStream(fullPath)) {
+                    inputStream.transferTo(outputStream);
+                }
+            };
+
+            return ResponseEntity.ok()
+                    .contentLength(Files.size(fullPath))
+                    .contentType(MediaType.TEXT_PLAIN)
+                    .body(stream);
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // should not happen
+    }
+}
