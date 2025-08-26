@@ -31,14 +31,11 @@ public class FileService {
 
     private final MainConfigurationProperties properties;
 
-    public Path resolveRequestedPath(String requestUri, String requestPath) {
-        String realRequestUri;
-        if (requestUri.equals(requestPath)) {
-            realRequestUri = "";
-        } else {
-            realRequestUri = requestUri.substring(requestPath.length() + 1).replace("%20", " ");
+    public Path resolveRequestedPath(String requestedPath) {
+        if (requestedPath.startsWith("/")) {
+            requestedPath = requestedPath.substring(1);
         }
-        return getFullPath(Path.of(realRequestUri));
+        return getFullPath(Path.of(requestedPath));
     }
 
     public Path getFullPath(Path requestedPath) {
