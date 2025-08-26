@@ -23,6 +23,8 @@ public class MainConfigurationProperties {
     @Range(min = 0, max = 9)
     private int zipCompressionLevel;
 
+    private String serverName;
+
     public Path getDataPathAsPath() {
         return Path.of(dataPath);
     }
