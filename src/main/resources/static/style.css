@@ -124,7 +124,7 @@ button {
     color: var(--main-text-color);
 }
 
-.file-list-wrapper {
+.content-wrapper {
     font-family: "Poppins", sans-serif;
     border-collapse: collapse;
     width: auto;
@@ -154,9 +154,6 @@ button {
 .file-row {
     border-bottom: 2px solid var(--topbar-bg-color);
     transition: background 0.2s;
-}
-
-.dir-row {
     cursor: pointer;
 }
 
@@ -207,17 +204,30 @@ button {
     height: 24px;
 }
 
+.file-content-wrapper {
+    margin-top: 40px;
+}
+
+.file-content-title {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.file-content {
+    width: 100%;
+    min-height: 400px;
+    height: fit-content;
+    border-radius: 8px;
+}
+
+.hidden {
+    display: none;
+}
+
 .unavailable {
     opacity: 40%;
 }
 
 button:hover.unavailable {
     cursor: default;
-}
-
-.file-content-wrapper {
-    font-family: "Poppins", sans-serif;
-    border-collapse: collapse;
-    width: auto;
-    padding: 0 var(--rl-padding) var(--rl-padding) var(--rl-padding);
 }

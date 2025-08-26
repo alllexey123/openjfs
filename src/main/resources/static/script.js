@@ -5,7 +5,7 @@ function updateData(path) {
     fetch(`/list/${path}`)
         .then((response) => response.json())
         .then((data) => {
-            updateFileList(data)
+            updateContent(data)
             updateTopbar(data)
         });
 }
@@ -25,10 +25,39 @@ window.addEventListener('popstate', (event) => {
     }
 });
 
-function updateFileList(data) {
-    let files = data['files']
-    files = files == null ? [] : files;
+function updateContent(data) {
+    const fileContentWrapper = document.querySelector('.file-content-wrapper');
+    if (data['type'] === 'DIRECTORY') {
+        let files = data['files']
 
+        files = files == null ? [] : files;
+        updateFileList(files);
+        updateFileContent('');
+
+        fileContentWrapper.classList.add('hidden');
+    } else {
+        let fileContentTitle = document.querySelector('.file-content-title');
+        let fileContent = document.querySelector('.file-content');
+        if (data['size'] <= 128 * 1024) { // max 128KB
+            fetch(`/text/${data['path'] + data['name']}`)
+                .then(value => value.text())
+                .then(text => {
+                    fileContent.classList.remove('hidden');
+                    fileContentTitle.textContent = 'File contents:';
+                    updateFileContent(text)
+                });
+        } else {
+            fileContentTitle.textContent = 'File is too huge to display.'
+            fileContent.classList.add('hidden');
+        }
+
+        updateFileList([data]);
+
+        fileContentWrapper.classList.remove('hidden');
+    }
+}
+
+function updateFileList(files) {
     const fileList = document.querySelector('.file-list');
     fileList.innerHTML = '';
 
@@ -37,6 +66,11 @@ function updateFileList(data) {
         let listItem = createListItem(file);
         fileList.appendChild(listItem);
     }
+}
+
+function updateFileContent(text) {
+    let fileContent = document.querySelector('.file-content');
+    fileContent.value = text;
 }
 
 function updateTopbar(data) {
@@ -50,11 +84,15 @@ function updateTopbarPath(data) {
     addLinkListener(serverNameSegment);
     topbarPathDiv.innerHTML = '';
     topbarPathDiv.appendChild(serverNameSegment);
-
     let fullPath = data['path'] + data['name'];
-    let splitPath = fullPath.split('/');
 
+    let splitPath = fullPath.split('/');
     let pathBuffer = '';
+
+    if (data['type'] !== 'DIRECTORY') {
+        splitPath = splitPath.slice(0, splitPath.length - 1);
+    }
+
     for (let pathSegmentStr of splitPath) {
         if (pathSegmentStr === '') continue;
         pathBuffer += pathSegmentStr + '/';
@@ -144,14 +182,14 @@ function createListItem(file) {
     colActions.appendChild(linkButton);
 
     listItem.onclick = () => {
-        if (!isDirectory) return;
+        // if (!isDirectory) return;
         updateData(path + fileName);
         updateWindowPath(path + fileName);
     }
 
     linkButton.onclick = (e) => {
         e.stopPropagation();
-        navigator.clipboard.writeText(window.location.origin+ '/' + path + fileName)
+        navigator.clipboard.writeText(window.location.origin + '/' + path + fileName)
     }
 
     downloadButton.onclick = (e) => {

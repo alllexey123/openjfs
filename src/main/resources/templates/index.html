@@ -42,21 +42,28 @@
     </div>
 </div>
 
-<div class="file-list-wrapper">
-    <div class="file-list-header">
-        <div class="col name">Name</div>
-        <div class="col modified">Last modified</div>
-        <div class="col size">Size</div>
-        <div class="col actions"></div>
+Si
+<div class="content-wrapper">
+    <div class="file-list-wrapper">
+        <div class="file-list-header">
+            <div class="col name">Name</div>
+            <div class="col modified">Last modified</div>
+            <div class="col size">Size</div>
+            <div class="col actions"></div>
+        </div>
+
+        <div class="file-list"></div>
     </div>
 
-    <div class="file-list">
+    <div class="file-content-wrapper">
+        <div class="file-content-title"></div>
+        <textarea class="file-content"></textarea>
     </div>
 </div>
 
-
 <script th:inline="javascript">
     const allowDownloadDirs = /*[[${allowDownloadDirs}]]*/ false;
+
     function handleTopbarLink() {
         navigator.clipboard.writeText(window.location);
     }
