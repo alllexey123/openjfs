@@ -88,11 +88,7 @@ button {
     background-color: var(--hovered-button-bg-color);
 }
 
-.topbar-right .download-icon {
-    height: 28px;
-}
-
-.topbar-right .link-icon {
+.topbar-right .topbar-icon {
     height: 28px;
 }
 
@@ -128,7 +124,7 @@ button {
     color: var(--main-text-color);
 }
 
-.content {
+.file-list-wrapper {
     font-family: "Poppins", sans-serif;
     border-collapse: collapse;
     width: auto;
@@ -217,4 +213,11 @@ button {
 
 button:hover.unavailable {
     cursor: default;
+}
+
+.file-content-wrapper {
+    font-family: "Poppins", sans-serif;
+    border-collapse: collapse;
+    width: auto;
+    padding: 0 var(--rl-padding) var(--rl-padding) var(--rl-padding);
 }

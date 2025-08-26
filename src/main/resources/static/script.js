@@ -5,8 +5,8 @@ function updateData(path) {
     fetch(`/list/${path}`)
         .then((response) => response.json())
         .then((data) => {
-            populateFileList(data)
-            populateTopbar(data)
+            updateFileList(data)
+            updateTopbar(data)
         });
 }
 
@@ -25,7 +25,7 @@ window.addEventListener('popstate', (event) => {
     }
 });
 
-function populateFileList(data) {
+function updateFileList(data) {
     let files = data['files']
     files = files == null ? [] : files;
 
@@ -39,7 +39,12 @@ function populateFileList(data) {
     }
 }
 
-function populateTopbar(data) {
+function updateTopbar(data) {
+    updateTopbarPath(data);
+    updateTopbarButtons(data);
+}
+
+function updateTopbarPath(data) {
     let topbarPathDiv = document.querySelector('.topbar-path');
     let serverNameSegment = topbarPathDiv.querySelector('.server-name').cloneNode(true);
     addLinkListener(serverNameSegment);
@@ -69,6 +74,13 @@ function populateTopbar(data) {
     }
 }
 
+function updateTopbarButtons(data) {
+    let topbarDownload = document.querySelector('.topbar-download');
+    let isDirectory = data['type'] === 'DIRECTORY';
+    if (isDirectory && !allowDownloadDirs) topbarDownload.classList.add('unavailable');
+    else topbarDownload.classList.remove('unavailable');
+}
+
 function addLinkListener(a) {
     a.addEventListener('click', (event) => {
         event.preventDefault();
@@ -89,7 +101,6 @@ function createListItem(file) {
 
     const listItem = document.createElement('div');
     listItem.classList.add('file-row');
-    // listItem.setAttribute('file-path', path + fileName);
     if (isDirectory) {
         listItem.classList.add('dir-row')
     }
