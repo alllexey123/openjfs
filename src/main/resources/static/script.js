@@ -158,7 +158,7 @@ function createListItem(file) {
     const icon = document.createElement('img');
     icon.classList.add('icon');
     icon.alt = isDirectory ? 'dir' : 'file';
-    icon.src = '/svg/' + getSvgName(fileName, isDirectory);
+    icon.src = '/svg/' + getSvgName(file);
     const nameTextNode = document.createTextNode(fileName);
     colName.appendChild(icon);
     colName.appendChild(nameTextNode);
@@ -220,9 +220,11 @@ function createListItem(file) {
     return listItem;
 }
 
-const getSvgName = (filename, isDirectory) => {
+const getSvgName = (file) => {
+    let isDirectory = file['type'] === 'DIRECTORY';
+    let filename = file['name'];
     if (isDirectory) {
-        return 'directory.svg';
+        return file['empty'] ? 'folder-empty.svg' : 'folder.svg';
     }
 
     const ext = getFileExtension(filename);
