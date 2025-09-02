@@ -1,19 +1,12 @@
+const fileContentWrapper = document.querySelector('.file-content-wrapper');
+const fileContentTitle = document.querySelector('.file-content-title');
+const fileContent = document.querySelector('.file-content');
+const fileList = document.querySelector('.file-list');
+const topbarPath = document.querySelector('.topbar-path');
+const topbarDownload = document.querySelector('.topbar-download');
+
 let path = window.location.pathname.substring(4);
 updateData(path);
-
-function updateData(path) {
-    fetch(`/list/${path}`)
-        .then((response) => response.json())
-        .then((data) => {
-            updateContent(data)
-            updateTopbar(data)
-        });
-}
-
-function updateWindowPath(path) {
-    const newUrl = `/ui/${path}`;
-    window.history.pushState({path: newUrl}, '', newUrl);
-}
 
 window.addEventListener('popstate', (event) => {
     if (event.state && event.state.path) {
@@ -25,21 +18,28 @@ window.addEventListener('popstate', (event) => {
     }
 });
 
-function updateContent(data) {
-    const fileContentWrapper = document.querySelector('.file-content-wrapper');
-    if (data['type'] === 'DIRECTORY') {
-        let files = data['files']
+
+function updateData(path) {
+    fetch(`/list/${path}`)
+        .then((response) => response.json())
+        .then((data) => {
+            updateContent(data)
+            updateTopbar(data)
+        });
+}
+
+function updateContent(file) {
+    fileContentWrapper.classList.toggle('hidden', isDirectory(file));
+
+    if (isDirectory(file)) {
+        let files = file['files']
 
         files = files == null ? [] : files;
         updateFileList(files);
         updateFileContent('');
-
-        fileContentWrapper.classList.add('hidden');
     } else {
-        let fileContentTitle = document.querySelector('.file-content-title');
-        let fileContent = document.querySelector('.file-content');
-        if (data['size'] <= 128 * 1024) { // max 128KB
-            fetch(`/text/${data['path'] + data['name']}`)
+        if (file['size'] <= 128 * 1024) { // max 128KB
+            fetch(`/text/${file['path'] + file['name']}`)
                 .then(value => value.text())
                 .then(text => {
                     fileContent.classList.remove('hidden');
@@ -51,14 +51,11 @@ function updateContent(data) {
             fileContent.classList.add('hidden');
         }
 
-        updateFileList([data]);
-
-        fileContentWrapper.classList.remove('hidden');
+        updateFileList([file]);
     }
 }
 
 function updateFileList(files) {
-    const fileList = document.querySelector('.file-list');
     fileList.innerHTML = '';
 
     sortFileList(files);
@@ -71,15 +68,14 @@ function updateFileList(files) {
 
 function sortFileList(files) {
     files.sort((a, b) => {
-        if (a.type === "DIRECTORY" && b.type !== "DIRECTORY") return -1;
-        if (a.type !== "DIRECTORY" && b.type === "DIRECTORY") return 1;
+        if (isDirectory(a) && !isDirectory(b)) return -1;
+        if (!isDirectory(a) && isDirectory(b)) return 1;
 
         return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
     });
 }
 
 function updateFileContent(text) {
-    let fileContent = document.querySelector('.file-content');
     fileContent.value = text;
 }
 
@@ -88,18 +84,17 @@ function updateTopbar(data) {
     updateTopbarButtons(data);
 }
 
-function updateTopbarPath(data) {
-    let topbarPathDiv = document.querySelector('.topbar-path');
-    let serverNameSegment = topbarPathDiv.querySelector('.server-name').cloneNode(true);
+function updateTopbarPath(file) {
+    let serverNameSegment = topbarPath.querySelector('.server-name').cloneNode(true);
     addLinkListener(serverNameSegment);
-    topbarPathDiv.innerHTML = '';
-    topbarPathDiv.appendChild(serverNameSegment);
-    let fullPath = data['path'] + data['name'];
+    topbarPath.innerHTML = '';
+    topbarPath.appendChild(serverNameSegment);
+    let fullPath = file['path'] + file['name'];
 
     let splitPath = fullPath.split('/');
     let pathBuffer = '';
 
-    if (data['type'] !== 'DIRECTORY') {
+    if (isDirectory(file)) {
         splitPath = splitPath.slice(0, splitPath.length - 1);
     }
 
@@ -117,16 +112,13 @@ function updateTopbarPath(data) {
         a.text = pathSegmentStr;
         addLinkListener(a);
 
-        topbarPathDiv.appendChild(arrow);
-        topbarPathDiv.appendChild(a);
+        topbarPath.appendChild(arrow);
+        topbarPath.appendChild(a);
     }
 }
 
-function updateTopbarButtons(data) {
-    let topbarDownload = document.querySelector('.topbar-download');
-    let isDirectory = data['type'] === 'DIRECTORY';
-    if (isDirectory && !allowDownloadDirs) topbarDownload.classList.add('unavailable');
-    else topbarDownload.classList.remove('unavailable');
+function updateTopbarButtons(file) {
+    topbarDownload.classList.toggle('unavailable', isDirectory(file) && !allowDownloadDirs);
 }
 
 function addLinkListener(a) {
@@ -138,18 +130,22 @@ function addLinkListener(a) {
     });
 }
 
+function updateWindowPath(path) {
+    const newUrl = `/ui/${path}`;
+    window.history.pushState({path: newUrl}, '', newUrl);
+}
+
 function createListItem(file) {
-    let fileType = file['type'];
-    let isDirectory = fileType === 'DIRECTORY';
+    let isDir = isDirectory(file);
     let fileName = file['name'];
     let fileLastModifiedRaw = file['lastModified'];
     let path = file['path'];
     let fileLastModified = fileLastModifiedRaw === null ? '—' : formatDate(fileLastModifiedRaw);
-    let fileSize = !isDirectory ? formatBytes(file['size']) : '—';
+    let fileSize = !isDir ? formatBytes(file['size']) : '—';
 
     const listItem = document.createElement('div');
     listItem.classList.add('file-row');
-    if (isDirectory) {
+    if (isDir) {
         listItem.classList.add('dir-row')
     }
     const colName = document.createElement('div');
@@ -157,7 +153,7 @@ function createListItem(file) {
     colName.classList.add('col', 'name');
     const icon = document.createElement('img');
     icon.classList.add('icon');
-    icon.alt = isDirectory ? 'dir' : 'file';
+    icon.alt = isDir ? 'dir' : 'file';
     icon.src = '/svg/' + getSvgName(file);
     const nameTextNode = document.createTextNode(fileName);
     colName.appendChild(icon);
@@ -177,7 +173,7 @@ function createListItem(file) {
     colActions.classList.add('col', 'actions');
     const downloadButton = document.createElement('button');
     const downloadIcon = document.createElement('img');
-    if (isDirectory && !allowDownloadDirs) downloadButton.classList.add('unavailable')
+    if (isDir && !allowDownloadDirs) downloadButton.classList.add('unavailable')
     downloadIcon.classList.add('icon');
     downloadIcon.alt = 'download';
     downloadIcon.src = '/svg/download.svg';
@@ -191,20 +187,17 @@ function createListItem(file) {
     linkButton.appendChild(linkIcon);
     colActions.appendChild(linkButton);
     listItem.onclick = () => {
-
-        // if (!isDirectory) return;
         updateData(path + fileName);
         updateWindowPath(path + fileName);
     }
     linkButton.onclick = (e) => {
-
         e.stopPropagation();
         navigator.clipboard.writeText(window.location.origin + '/' + path + fileName)
     }
     downloadButton.onclick = (e) => {
 
         e.stopPropagation();
-        if (isDirectory && !allowDownloadDirs) return;
+        if (isDir && !allowDownloadDirs) return;
         window.location.pathname = '/direct/' + path + fileName;
     }
 
@@ -220,10 +213,10 @@ function createListItem(file) {
     return listItem;
 }
 
+// I hate this
 const getSvgName = (file) => {
-    let isDirectory = file['type'] === 'DIRECTORY';
     let filename = file['name'];
-    if (isDirectory) {
+    if (isDirectory(file)) {
         return file['empty'] ? 'folder-empty.svg' : 'folder.svg';
     }
 
@@ -352,4 +345,6 @@ const formatBytes = (bytes, decimals = 1) => {
         return formattedValue.toFixed(dm) + ' ' + sizes[i];
     }
 }
+
+const isDirectory = (file) => file.type === 'DIRECTORY';
 
