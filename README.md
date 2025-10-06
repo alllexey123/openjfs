@@ -2,9 +2,9 @@
 
 A simple, open-source **Java Spring Boot** application designed to serve static files from a specified directory. It provides straightforward, unauthenticated access to your files, for easy personal or internal network file sharing.
 
-**Please note: This project is under active development. Expect changes and potential instability.**
+**This project's development has reached it's end of life because I have other cool ideas to work on.**
 
-**Symlinks are not officially supported at the moment.**
+**Symlinks are not officially supported (though they may work).**
 ## Features
 
 *   **Directory Download (as ZIP):** Download entire directories as a single ZIP archive.
@@ -16,7 +16,7 @@ A simple, open-source **Java Spring Boot** application designed to serve static 
 *   [x] **File Lists API**
 *   [x] **File Search API**
 *   [ ] **File Indexing** *(maybe)*
-*   [ ] **Web UI** 
+*   [x] **Web UI** 
 *   [ ] **Admin Panel**
 *   [ ] **Docker Support**
 *   [ ] **Advanced Exception Logging**
@@ -123,4 +123,5 @@ The file server is configured through environment variables.
 | `OPENJFS_ALLOW_ZIP_DIRECTORIES` | Set to `true` to enable downloading entire directories as a ZIP archive.    | `true`            |
 | `OPENJFS_ZIP_COMPRESSION_LEVEL` | The compression level for ZIP archives, from 0 (no compression) to 9 (max). | `1`               |
 | `OPENJFS_REQUEST_TIMEOUT`       | The request timeout (crucial for large file downloads).                     | `3600000`         |
+| `OPENJFS_SERVER_NAME`           | The server name to use as page title.                                       | `openjfs`         |
 
