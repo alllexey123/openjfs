@@ -1,4 +1,4 @@
-# Open Java File Server (🛠️ WIP 🛠️)
+# Open Java File Server (EOL but usable)
 
 A simple, open-source **Java Spring Boot** application designed to serve static files from a specified directory. It provides straightforward, unauthenticated access to your files, for easy personal or internal network file sharing.
 
@@ -18,7 +18,7 @@ A simple, open-source **Java Spring Boot** application designed to serve static 
 *   [ ] **File Indexing** *(maybe)*
 *   [x] **Web UI** 
 *   [ ] **Admin Panel**
-*   [ ] **Docker Support**
+*   [x] **Docker Support** *(it's very easy to run via docker, so mark as done)*
 *   [ ] **Advanced Exception Logging**
 
 ## Getting Started
