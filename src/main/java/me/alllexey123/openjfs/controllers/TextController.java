@@ -1,7 +1,6 @@
 package me.alllexey123.openjfs.controllers;
 
 import lombok.RequiredArgsConstructor;
-import me.alllexey123.openjfs.configuration.MainConfigurationProperties;
 import me.alllexey123.openjfs.services.FileService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -13,41 +12,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 @RestController
-@RequestMapping("/direct")
+@RequestMapping("/text")
 @RequiredArgsConstructor
-public class DirectController {
-
-    private final MainConfigurationProperties properties;
+public class TextController {
 
     private final FileService fileService;
 
     @GetMapping("/{*path}")
-    public ResponseEntity<StreamingResponseBody> directDownload(@PathVariable String path) throws IOException {
+    public ResponseEntity<StreamingResponseBody> asText(@PathVariable String path) throws IOException {
         Path fullPath = fileService.resolveRequestedPath(path);
 
         HttpStatusCode accessCheck = fileService.checkAccess(fullPath);
         if (!accessCheck.is2xxSuccessful()) return ResponseEntity.status(accessCheck).build();
 
-        String filename = fullPath.getFileName().toString();
-        if (fullPath.equals(properties.getDataPathAsPath())) filename = "data";
-
         if (Files.isDirectory(fullPath)) {
-            // 400 if it's a directory (and zipping dirs is disabled)
-            if (!properties.isAllowZipDirectories()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-            }
-
-            StreamingResponseBody zipStream = fileService.zipDirectory(fullPath);
-
-            return ResponseEntity.ok()
-                    .header("Content-Disposition", "attachment; filename=\"%s.zip\"".formatted(filename))
-                    .contentType(new MediaType("application", "zip"))
-                    .body(zipStream);
+            return ResponseEntity.badRequest().build(); // can't do this for directories
         }
 
         if (Files.isRegularFile(fullPath)) {
@@ -59,8 +44,7 @@ public class DirectController {
 
             return ResponseEntity.ok()
                     .contentLength(Files.size(fullPath))
-                    .header("Content-Disposition", "attachment; filename=\"%s\"".formatted(filename))
-                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .contentType(MediaType.TEXT_PLAIN)
                     .body(stream);
         }
 

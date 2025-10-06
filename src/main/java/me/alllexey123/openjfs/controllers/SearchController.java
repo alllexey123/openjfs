@@ -1,6 +1,5 @@
 package me.alllexey123.openjfs.controllers;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import me.alllexey123.openjfs.model.FileInfo;
 import me.alllexey123.openjfs.services.FileService;
@@ -19,9 +18,9 @@ public class SearchController {
 
     private final FileService fileService;
 
-    @GetMapping(value = "**")
-    public ResponseEntity<List<FileInfo>> search(HttpServletRequest request, @RequestParam("q") String query) {
-        Path fullPath = fileService.resolveRequestedPath(request.getRequestURI(), "/search");
+    @GetMapping("/{*path}")
+    public ResponseEntity<List<FileInfo>> search(@PathVariable String path, @RequestParam("q") String query) {
+        Path fullPath = fileService.resolveRequestedPath(path);
 
         HttpStatusCode accessCheck = fileService.checkAccess(fullPath);
         if (!accessCheck.is2xxSuccessful()) return ResponseEntity.status(accessCheck).build();

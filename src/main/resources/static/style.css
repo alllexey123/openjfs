@@ -1,0 +1,246 @@
+:root {
+    --topbar-bg-color: #EEEEEE;
+    --file-div-color: #E0E0E0;
+    --hovered-button-bg-color: #DEDEDE;
+    --main-text-color: #000000;
+    --rl-padding: 40px;
+}
+
+/* poppins-regular - latin */
+@font-face {
+    font-display: swap;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    src: url('/fonts/poppins-v23-latin-regular.woff2') format('woff2');
+}
+
+
+body {
+    margin: 0;
+    color: var(--main-text-color);
+    font-family: "Poppins", sans-serif;
+}
+
+button {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.topbar {
+    background-color: var(--topbar-bg-color);
+    padding: 0 var(--rl-padding);
+    display: flex;
+    align-items: center;
+
+    position: sticky;
+    top: 0;              /* stick to top of viewport */
+    z-index: 1000;       /* make sure it stays above file rows */
+}
+
+.topbar-path {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+}
+
+.topbar-path a {
+    color: var(--main-text-color);
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 22px;
+    border-radius: 12px;
+    transition: background 0.2s ease;
+    padding: 4px 8px;
+}
+
+.topbar-path a:hover {
+    background-color: var(--hovered-button-bg-color);
+}
+
+.topbar-path .topbar-arrow {
+    height: 20px;
+}
+
+.topbar-path .server-name {
+    color: #3d5d8d;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 0;
+    margin-left: auto;
+}
+
+.topbar-right button {
+    display: flex;
+    align-items: center;
+    border-radius: 12px;
+    transition: background 0.2s ease;
+    padding: 6px;
+}
+
+.topbar-right button:hover:not(.unavailable) {
+    background-color: var(--hovered-button-bg-color);
+}
+
+.topbar-right .topbar-icon {
+    height: 28px;
+}
+
+.topbar-right .topbar-search .search-icon {
+    height: 24px;
+}
+
+.topbar-right .topbar-search {
+    display: flex;
+    align-items: center;
+    background: var(--hovered-button-bg-color);
+    padding: 8px 12px;
+    border-radius: 24px;
+    width: 300px;
+    margin-left: 16px;
+}
+
+.topbar-right .topbar-search button {
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+    border-radius: 12px;
+    transition: background 0.2s ease;
+    padding: 0;
+}
+
+.topbar-right .topbar-search input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 18px;
+    flex: 1;
+    color: var(--main-text-color);
+}
+
+.content-wrapper {
+    font-family: "Poppins", sans-serif;
+    border-collapse: collapse;
+    width: auto;
+    padding: 0 var(--rl-padding) var(--rl-padding) var(--rl-padding);
+}
+
+.file-list-header,
+.file-row {
+    display: grid;
+    grid-template-columns: 1fr 200px 120px 80px;
+    padding: 10px 16px;
+    align-items: center;
+}
+
+.file-list-header {
+    font-weight: 600;
+    border-bottom: 2px solid var(--file-div-color);
+    padding-top: 16px;
+    padding-bottom: 4px;
+
+    position: sticky;
+    top: 44px;
+    background: white;
+    z-index: 999;
+}
+
+.file-row {
+    border-bottom: 2px solid var(--topbar-bg-color);
+    transition: background 0.2s;
+    cursor: pointer;
+}
+
+.file-row:hover {
+    background: var(--topbar-bg-color);
+}
+
+.col {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.col.name {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.col.name .icon {
+    height: 24px;
+}
+
+.col.actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.col.actions button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px;
+    border-radius: 6px;
+    transition: background 0.2s;
+    display: flex;
+    justify-content: center;
+}
+
+.col.actions button:hover:not(.unavailable) {
+    background: #ddd;
+}
+
+.col.actions .icon{
+    height: 24px;
+}
+
+.file-content-wrapper {
+    margin-top: 40px;
+}
+
+.file-content-title {
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.file-content {
+    width: 100%;
+    height: 70vh;
+    min-height: 300px;
+    max-height: 80vh;
+    resize: vertical;
+    overflow: auto;
+    font-family: monospace;
+    border: 1px solid #ccc;
+    padding: 12px;
+    border-radius: 8px;
+    line-height: 1.4;
+    background: #fafafa;
+}
+
+
+.hidden {
+    display: none;
+}
+
+.unavailable {
+    opacity: 50%;
+}
+
+.hidden-file {
+    opacity: 50%;
+}
+
+button:hover.unavailable {
+    cursor: default;
+}

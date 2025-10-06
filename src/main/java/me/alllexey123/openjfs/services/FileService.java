@@ -31,14 +31,11 @@ public class FileService {
 
     private final MainConfigurationProperties properties;
 
-    public Path resolveRequestedPath(String requestUri, String requestPath) {
-        String realRequestUri;
-        if (requestUri.equals(requestPath)) {
-            realRequestUri = "";
-        } else {
-            realRequestUri = requestUri.substring(requestPath.length() + 1).replace("%20", " ");
+    public Path resolveRequestedPath(String requestedPath) {
+        if (requestedPath.startsWith("/")) {
+            requestedPath = requestedPath.substring(1);
         }
-        return getFullPath(Path.of(realRequestUri));
+        return getFullPath(Path.of(requestedPath));
     }
 
     public Path getFullPath(Path requestedPath) {
@@ -81,9 +78,10 @@ public class FileService {
     // assume file (directory) exists and is accessible (visible, not outside, etc.)
     public FileInfo getFileInfo(Path fullPath, int depth) {
         if (depth < 0) return null; // should not happen
-        Path parentPath = properties.getDataPathAsPath().relativize(fullPath).getParent();
+        Path relativize = properties.getDataPathAsPath().relativize(fullPath);
+        Path parentPath = relativize.getParent();
         String relPath = parentPath == null ? "" : (parentPath + "/");
-        String name = fullPath.getFileName().toString();
+        String name = relativize.toString().isEmpty() ? "" : fullPath.getFileName().toString();
         long lastModifiedMillis = -1;
         LocalDateTime lastModified = null;
 
